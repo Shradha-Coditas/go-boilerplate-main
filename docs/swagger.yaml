@@ -1,0 +1,381 @@
+basePath: /v1
+definitions:
+  albums.AlbumRequest:
+    properties:
+      artist:
+        description: Artist name of Album
+        type: string
+      price:
+        description: Price of Album
+        type: number
+      title:
+        description: title of Album
+        type: string
+    required:
+    - artist
+    - price
+    - title
+    type: object
+  albums.AlbumResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  albums.AlbumUpdateRequest:
+    properties:
+      artist:
+        description: Artist name of Album
+        type: string
+      id:
+        description: Id of Album
+        type: integer
+      price:
+        description: Price of Album
+        type: number
+      title:
+        description: title of Album
+        type: string
+    required:
+    - id
+    type: object
+  albums.AlbumsResponseData:
+    properties:
+      artist:
+        description: Artist name of Album
+        type: string
+      createdAt:
+        description: time at row created
+        type: string
+      id:
+        description: Id of Album
+        type: integer
+      price:
+        description: Price of Album
+        type: number
+      title:
+        description: title of Album
+        type: string
+    type: object
+  delete.AlbumDeleteRequest:
+    properties:
+      albumid:
+        description: Id for album request to delete
+        example: 1
+        type: integer
+    required:
+    - albumid
+    type: object
+  genericmodel.ErrResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  get.AlbumGetResponse:
+    properties:
+      Albums:
+        items:
+          $ref: '#/definitions/albums.AlbumsResponseData'
+        type: array
+      message:
+        example: Albums data found successFully
+        type: string
+      totalAlbums:
+        example: 10
+        type: integer
+    type: object
+  tags.LastTick:
+    properties:
+      close:
+        description: Low Price of LastTick
+        type: number
+      high:
+        description: High Price of LastTick
+        type: number
+      id:
+        description: id of LastTick
+        type: string
+      low:
+        description: Low Price of LastTick
+        type: number
+      open:
+        description: Open Price of LastTick
+        type: number
+      price:
+        description: Price of LastTick
+        type: integer
+      tickDate:
+        description: Total Volume of LasTick
+        type: integer
+      totalVolume:
+        description: Total Volume of LasTick
+        type: number
+    type: object
+  tags.LastTickResponse:
+    properties:
+      string:
+        description: Total Volume of LasTick
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Golang BoilerPlate Api.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Boiler Plate
+  version: "1.0"
+paths:
+  /album:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a album by particular Id.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Params for delete Album by id.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/delete.AlbumDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/albums.AlbumResponse'
+        "400":
+          description: Invalid Payload.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "404":
+          description: Album Not Found.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+      summary: Delete a album details
+      tags:
+      - Albums
+    get:
+      consumes:
+      - application/json
+      description: Get all Album list with pagination.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: limit records for pagination Max 20
+        example: 10
+        in: query
+        name: limit
+        type: integer
+      - description: Skip records for pagination start from 0
+        example: 0
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/get.AlbumGetResponse'
+        "204":
+          description: ""
+        "400":
+          description: Invalid Request.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "404":
+          description: Albums Not Found.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+      summary: To fetch Album list with pagination
+      tags:
+      - Albums
+    patch:
+      consumes:
+      - application/json
+      description: Api for update album data.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Payload for Album
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/albums.AlbumUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/albums.AlbumResponse'
+        "400":
+          description: Invalid Payload.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "404":
+          description: Not Found.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "406":
+          description: Token Expired.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "409":
+          description: Conflict.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "503":
+          description: service Unavailable.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+      summary: Update data of album request
+      tags:
+      - Albums
+    post:
+      consumes:
+      - application/json
+      description: Api for insert album data.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Payload for Album
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/albums.AlbumRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/albums.AlbumResponse'
+        "400":
+          description: Invalid Payload.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "406":
+          description: Token Expired.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "409":
+          description: Conflict.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "503":
+          description: service Unavailable.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+      summary: store data of album request
+      tags:
+      - Albums
+  /tags:
+    post:
+      consumes:
+      - application/json
+      description: Api for Last Ticker data.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: authorization
+        required: true
+        type: string
+      - description: Payload for Album
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tags.LastTick'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/tags.LastTickResponse'
+        "400":
+          description: Invalid Payload.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "406":
+          description: Token Expired.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "409":
+          description: Conflict.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "500":
+          description: Internal Server Error.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+        "503":
+          description: service Unavailable.
+          schema:
+            $ref: '#/definitions/genericmodel.ErrResponse'
+      summary: store data of Last Ticker request
+      tags:
+      - Tags
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+x-extension-openapi:
+  example: value on a json format
